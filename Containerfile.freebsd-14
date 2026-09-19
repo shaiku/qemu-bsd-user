@@ -1,4 +1,4 @@
-FROM ghcr.io/freebsd/freebsd-runtime:14.4
+FROM ghcr.io/freebsd/freebsd-runtime:14.5
 
 ENV ASSUME_ALWAYS_YES="yes"
 
@@ -19,7 +19,7 @@ RUN /usr/sbin/pkg bootstrap && \
 	FreeBSD-pf-dev \
 	FreeBSD-runtime-dev \
 	FreeBSD-utilities FreeBSD-utilities-dev
-RUN pkg install -y bash git gmake python pkgconf pixman bison glib ninja
+RUN pkg install -y bash git gmake python312 pkgconf pixman bison glib ninja
 
 RUN pw groupadd -n imps -g 730
 RUN pw useradd -n imp -u 730 -g 730 -d /home/qemu -m -s /bin/tcsh -c "Warner Losh QEMU"
@@ -27,4 +27,4 @@ RUN pw useradd -n imp -u 730 -g 730 -d /home/qemu -m -s /bin/tcsh -c "Warner Los
 ENV LANG="en_US.UTF-8"
 ENV MAKE="/usr/local/bin/gmake"
 ENV NINJA="/usr/local/bin/ninja"
-ENV PYTHON="/usr/local/bin/python3"
+ENV PYTHON="/usr/local/bin/python3.12"
