@@ -1314,6 +1314,7 @@ static void machine_finalize(Object *obj)
     g_free(ms->nvdimms_state);
     g_free(ms->numa_state);
     g_free(ms->audiodev);
+    g_free(ms->fdt);
 }
 
 bool machine_usb(MachineState *machine)
@@ -1624,14 +1625,6 @@ void machine_run_board_init(MachineState *machine, const char *mem_path, Error *
        reading from the other reads, because timer polling functions query
        clock values from the log. */
     replay_checkpoint(CHECKPOINT_INIT);
-
-    if (!xen_enabled()) {
-        /* On 32-bit hosts, QEMU is limited by virtual address space */
-        if (machine->ram_size > (2047 << 20) && HOST_LONG_BITS == 32) {
-            error_setg(errp, "at most 2047 MB RAM can be simulated");
-            return;
-        }
-    }
 
     if (machine->memdev) {
         ram_addr_t backend_size = object_property_get_uint(OBJECT(machine->memdev),

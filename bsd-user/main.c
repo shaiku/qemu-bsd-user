@@ -257,6 +257,7 @@ CPUArchState *cpu_copy(CPUArchState *env)
     return new_env;
 }
 
+
 static QemuPluginList plugins = QTAILQ_HEAD_INITIALIZER(plugins);
 
 void gemu_log(const char *fmt, ...)

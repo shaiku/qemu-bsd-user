@@ -19,9 +19,14 @@
 ssize_t safe_recvmsg(int s, struct msghdr *msg, int flags);
 ssize_t safe_sendmsg(int s, const struct msghdr *msg, int flags);
 
+abi_long t2h_freebsd_cmsg(struct msghdr *msgh,
+        struct target_msghdr *target_msgh);
+abi_long h2t_freebsd_cmsg(struct target_msghdr *target_msgh,
+        struct msghdr *msgh);
+
 /* do_sendrecvmsg_locked() Must return target values and target errnos. */
-static abi_long do_sendrecvmsg_locked(int fd, struct target_msghdr *msgp,
-                                      int flags, int send)
+static inline abi_long do_sendrecvmsg_locked(int fd, struct target_msghdr *msgp,
+                                             int flags, int send)
 {
     abi_long ret, len;
     struct msghdr msg;
@@ -122,8 +127,8 @@ out2:
 }
 
 
-static abi_long do_sendrecvmsg(int fd, abi_ulong target_msg,
-                               int flags, int send)
+static inline abi_long do_sendrecvmsg(int fd, abi_ulong target_msg,
+                                      int flags, int send)
 {
     abi_long ret;
     struct target_msghdr *msgp;
@@ -160,7 +165,6 @@ static inline abi_long do_bsd_setsockopt(int sockfd, int level, int optname,
     struct sockopt_entry *e = get_sockopt_entry(level);
     void *p;
 
-    
     if (e == NULL) {
         gemu_log("Unsupported setsockopt level=%d optname=%d\n",
                  level, optname);
@@ -208,7 +212,7 @@ static inline abi_long do_bsd_setsockopt(int sockfd, int level, int optname,
             return get_errno(setsockopt(sockfd, level, optname, &val64, sizeof(val64)));
         default:
 #if HOST_LONG_BITS != TARGET_ABI_BITS || HOST_BIG_ENDIAN != TARGET_BIG_ENDIAN
-            gemu_log("Unsupported setsockopt level=%d optname=%d since host and target differ\n",
+            gemu_log("Unsupported setsockopt level=%d optname=%d\n",
                      level, optname);
             return -TARGET_ENOPROTOOPT;
 #endif
@@ -240,7 +244,6 @@ static inline abi_long do_bsd_getsockopt(int sockfd, int level, int optname,
     struct sockopt_entry *e = get_sockopt_entry(level);
     void *p;
 
-    
     if (e == NULL) {
         gemu_log("Unsupported getsockopt level=%d optname=%d\n",
                  level, optname);
@@ -313,7 +316,7 @@ static inline abi_long do_bsd_getsockopt(int sockfd, int level, int optname,
             continue;
         default:
 #if HOST_LONG_BITS != TARGET_ABI_BITS || HOST_BIG_ENDIAN != TARGET_BIG_ENDIAN
-            gemu_log("Unsupported getsockopt level=%d optname=%d since host and target differ\n",
+            gemu_log("Unsupported getsockopt level=%d optname=%d\n",
                      level, optname);
             return -TARGET_ENOPROTOOPT;
 #endif

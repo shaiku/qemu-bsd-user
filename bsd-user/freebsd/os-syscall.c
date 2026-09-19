@@ -17,14 +17,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#define _ACL_PRIVATE 1 // XXX Don't upstream: we need to sort out this junk and the twisty maze of .h
-
+#define _ACL_PRIVATE
 #include "qemu/osdep.h"
 
 #include "qemu/cutils.h"
 #include "qemu/path.h"
 #include <sys/mount.h>
 #include <sys/sysctl.h>
+#include <utime.h>
 #include <poll.h>
 
 #include "gdbstub/user.h"
@@ -68,11 +68,6 @@ safe_syscall4(int, clock_nanosleep, clockid_t, clock_id, int, flags,
 safe_syscall6(int, kevent, int, kq, const struct kevent *, changelist,
     int, nchanges, struct kevent *, eventlist, int, nevents,
     const struct timespec *, timeout);
-
-/* BSD dependent syscall shims */
-#include "os-stat.h"
-#include "os-proc.h"
-#include "os-misc.h"
 
 /* I/O */
 safe_syscall3(int, open, const char *, path, int, flags, mode_t, mode);

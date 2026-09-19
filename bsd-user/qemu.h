@@ -339,6 +339,8 @@ abi_long freebsd_rw_wrlock(abi_ulong target_addr, long fflag,
 abi_long freebsd_rw_unlock(abi_ulong target_addr);
 abi_long freebsd_umtx_shm(abi_ulong target_addr, long fflag);
 abi_long freebsd_umtx_robust_list(abi_ulong target_addr, size_t rbsize);
+abi_long freebsd_set_ceiling(abi_ulong target_addr, uint32_t ceiling,
+        uint32_t *old_ceiling);
 
 /* user access */
 

@@ -9,7 +9,6 @@
 #define FREEBSD_OS_FILE_H
 
 #include <sys/specialfd.h>
-int __sys___specialfd(int, const void *, size_t);
 
 /*
  * Asynchronous I/O.
@@ -74,17 +73,15 @@ static inline abi_long do_freebsd_copy_file_range(int infd,
     abi_long ret;
 
     inp = outp = NULL;
-    if (inofftp != 0) {
-        if (!access_ok(VERIFY_WRITE, inofftp, sizeof(off_t))) {
-            return -TARGET_EFAULT;
-        }
+    if (inofftp != 0 && !access_ok(VERIFY_WRITE, inofftp, sizeof(off_t))) {
+        return -TARGET_EFAULT;
+    } else if (inofftp != 0) {
         inoff = tswap64(*(off_t *)g2h_untagged(inofftp));
         inp = &inoff;
     }
-    if (outofftp != 0) {
-        if (!access_ok(VERIFY_WRITE, outofftp, sizeof(off_t))) {
-            return -TARGET_EFAULT;
-        }
+    if (outofftp != 0 && !access_ok(VERIFY_WRITE, outofftp, sizeof(off_t))) {
+        return -TARGET_EFAULT;
+    } else if (outofftp != 0) {
         outoff = tswap64(*(off_t *)g2h_untagged(outofftp));
         outp = &outoff;
     }

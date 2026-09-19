@@ -15,6 +15,11 @@
 #include "qemu-os.h"
 
 abi_long t2h_freebsd_cmsg(struct msghdr *msgh,
+        struct target_msghdr *target_msgh);
+abi_long h2t_freebsd_cmsg(struct target_msghdr *target_msgh,
+        struct msghdr *msgh);
+
+abi_long t2h_freebsd_cmsg(struct msghdr *msgh,
         struct target_msghdr *target_msgh)
 {
     struct cmsghdr *cmsg = CMSG_FIRSTHDR(msgh);
